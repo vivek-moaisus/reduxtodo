@@ -1,39 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lobster:wght@100;200;300;400;500;600;700;800&display=swap");
 
 body {
-    font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
-.header{
-    position: fixed;
-    width: 100vw;
-    margin-top: -18vh;
-    z-index: 1;
+.header {
+  position: fixed;
+  width: 100vw;
+  margin-top: -18vh;
+  z-index: 1;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
-.task-container{
-    display: flex;
-    margin-top: 18vh;
-    flex-wrap:wrap;
+.task-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 18vh;
+  flex-wrap: wrap;
 }
 
-.icons{
-    display: flex;
-    justify-content: flex-end;
+.icons {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.edit-icon{
-    width: 24px;
-    height: 24px;
-    margin-right: 1vh;
-    cursor: pointer;
+.edit-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 1vh;
+  cursor: pointer;
 }
 
-.delete-icon{
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+.delete-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }

@@ -1,27 +1,58 @@
 import { Field, Form, Formik } from "formik";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../action";
+import React, { useEffect, useState } from "react";
+import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { useDispatch } from "react-redux";
+import { addTodo, updateTodo } from "../reducer/reducers";
 
-function CreateTask({ modal, toggle }) {
+function CreateTask({ type, modal, toggle, item }) {
   const [taskName, setTaskName] = useState("");
-  const [status, setStatus] = useState("");
-  const dipatch = useDispatch();
+  const [status, setStatus] = useState("Incomplete");
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "taskName") {
-      setTaskName(value);
+  useEffect(() => {
+    if (type === "update" && item) {
+      setTaskName(item.taskName);
+      setStatus(item.status);
     } else {
-      setStatus(value);
+      setTaskName("");
+      setStatus("Incomplete");
+    }
+  }, [type, item, modal]);
+
+  const handelSubmit = (e) => {
+    e.preventDefault();
+    if (taskName && status) {
+      if (type === "add") {
+        dispatch(
+          addTodo({
+            taskName,
+            status,
+            time: new Date().toLocaleString(),
+          })
+        );
+      }
+      if (type === "update") {
+        if (item.taskName !== taskName || item.status !== status) {
+          dispatch(
+            updateTodo({
+              ...item,
+              taskName,
+              status,
+            })
+          );
+        }
+      }
+      toggle(false);
     }
   };
+
   return (
     <div>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Create Task</ModalHeader>
+        <ModalHeader toggle={toggle}>
+          {type === "update" ? "Update" : "Add"} Task
+        </ModalHeader>
         <ModalBody>
           <Formik>
             <Form>
@@ -32,7 +63,7 @@ function CreateTask({ modal, toggle }) {
                   className="form-control"
                   name="taskName"
                   value={taskName}
-                  onChange={handleChange}
+                  onChange={(e) => setTaskName(e.target.value)}
                 />
               </div>
               <div className="from-group">
@@ -42,7 +73,7 @@ function CreateTask({ modal, toggle }) {
                   className="form-control"
                   name="status"
                   value={status}
-                  onChange={handleChange}
+                  onChange={(e) => setStatus(e.target.value)}
                 >
                   <option disabled></option>
                   <option value="Incomplete">Incomplete</option>
@@ -53,15 +84,8 @@ function CreateTask({ modal, toggle }) {
           </Formik>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="primary"
-            onClick={() =>
-              dipatch(addTodo(taskName, status), setTaskName(""), setStatus(""))
-            }
-            type="submit"
-            modal={false}
-          >
-            Save
+          <Button color="primary" onClick={(e) => handelSubmit(e)}>
+            {type === "update" ? "Update" : "Add"} Task
           </Button>{" "}
           <Button color="secondary" onClick={toggle}>
             Cancel

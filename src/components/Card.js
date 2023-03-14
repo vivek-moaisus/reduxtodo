@@ -1,46 +1,69 @@
 import React, { useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import UpdateTask from "./UpdateTask";
-const Card = ({ taskObj, index, deleteTask, updateListArr }) => {
-  const [modal, setModal] = useState(false);
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTodo } from "../reducer/reducers";
+import CreateTask from "./CreateTask";
+const Card = (item) => {
+  const tasklist = useSelector((state) => state.item.tasklist);
+  const sortList = [...tasklist];
+  sortList.sort((a, b) => new Date(b.time) - new Date(a.time));
+  const [updateModal, setUpdateModal] = useState(false);
+  const toggle = () => setUpdateModal(!updateModal);
+  const dispatch = useDispatch();
 
-  const toggle = () => {
-    setModal(!modal);
+  const filter = useSelector((state) => state.item.filterList);
+  const filterTaskList = sortList.filter((item) => {
+    if (filter === "All") {
+      return true;
+    }
+    return item.status === filter;
+  });
+
+  const handelDelete = () => {
+    dispatch(deleteTodo(item.id));
+  };
+  const handelUpdate = () => {
+    setUpdateModal(true);
   };
 
-  const updateTask = (obj) => {
-    updateListArr(obj, index);
-  };
-
-  const handleDelete = () => {
-    deleteTask(index);
-  };
   return (
-    <div className="container">
-      <div className="row justify-content-center mt-3">
-        <div className="col-12 col-lg-8 col-xl-6">
-          <div className="card border-0 shadow">
-            <div className="p-3">
-              <div className="bg-gradient bg-secondary p-2 text-white rounded text-center w-25">
-                {taskObj.TaskName}
-              </div>
-              <p className="p-2">{taskObj.Status}</p>
-              <div className="text-end">
-                <FiEdit className="edit-icon" onClick={() => setModal(true)} />
-                <MdDelete className="delete-icon" onClick={handleDelete} />
+    <>
+      <div className="container">
+        {filterTaskList && filterTaskList.length > 0 ? (
+          filterTaskList.map((item) => (
+            <div className="row justify-content-center mt-3">
+              <div className="col-12 col-lg-8 col-xl-6">
+                <div className="card border-0 shadow">
+                  <div className="p-3" key={item.id}>
+                    <div className="bg-gradient bg-secondary p-2 text-white rounded text-center w-25">
+                      {item.taskName}
+                    </div>
+                    <p className="text-start p-1">{item.status}</p>
+                    <p className="text-start">{item.time}</p>
+                    <div className="text-end">
+                      <FiEdit className="edit-icon" onClick={handelUpdate} />
+                      <MdDelete
+                        className="delete-icon"
+                        onClick={handelDelete}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <h3>No TodoList Here!</h3>
+        )}
       </div>
-      <UpdateTask
-        modal={modal}
+      <CreateTask
+        type="update"
+        item={item}
+        modal={updateModal}
         toggle={toggle}
-        updateTask={updateTask}
-        taskObj={taskObj}
       />
-    </div>
+    </>
   );
 };
 
