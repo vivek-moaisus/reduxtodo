@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import {FcTodoList} from "react-icons/fc"
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodo } from "../reducer/reducers";
 import CreateTask from "./CreateTask";
@@ -20,6 +21,11 @@ const Card = (item) => {
     return item.status === filter;
   });
 
+  const searchList = useSelector((state) => state.item.search);
+  const searchTodo = filterTaskList.filter((item) =>
+    item.taskName.toLowerCase().includes(searchList)
+  );
+
   const handelDelete = () => {
     dispatch(deleteTodo(item.id));
   };
@@ -30,14 +36,15 @@ const Card = (item) => {
   return (
     <>
       <div className="container">
-        {filterTaskList && filterTaskList.length > 0 ? (
-          filterTaskList.map((item) => (
+        {searchTodo && searchTodo.length > 0 ? (
+          searchTodo
+          .map((item) => (
             <div className="row justify-content-center mt-3">
               <div className="col-12 col-lg-8 col-xl-6">
                 <div className="card border-0 shadow">
                   <div className="p-3" key={item.id}>
-                    <div className="bg-gradient bg-secondary p-2 text-white rounded text-center w-25">
-                      {item.taskName}
+                    <div className="p-2 text-start bg-gradient bg-secondary w-25 rounded text-white">
+                     <FcTodoList className="edit-icon"/> {item.taskName}
                     </div>
                     <p className="text-start p-1">{item.status}</p>
                     <p className="text-start">{item.time}</p>

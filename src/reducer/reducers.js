@@ -11,6 +11,7 @@ const getInitialList = () => {
 
 const initialData = {
   filterList: "All",
+  search:[],
   tasklist: getInitialList(),
 };
 
@@ -64,9 +65,12 @@ export const listSlice = createSlice({
     filterdlist: (state, action) => {
       state.filterList = action.payload;
     },
+    searchtodo: (state, action) => {
+      state.search = action.payload;
+    },
   },
 });
 
-export const { addTodo, deleteTodo, updateTodo, filterdlist } =
+export const { addTodo, deleteTodo, updateTodo, filterdlist, searchtodo } =
   listSlice.actions;
 export default listSlice.reducer;

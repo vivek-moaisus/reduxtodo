@@ -3,19 +3,22 @@ import CreateTask from "./CreateTask";
 import "./Todo.css";
 import { useState } from "react";
 import Card from "./Card";
-import { Pagination } from "@mui/material";
+// import { Pagination } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { filterdlist } from "../reducer/reducers";
+import { filterdlist, searchtodo } from "../reducer/reducers";
 
 function Todo() {
   const dispatch = useDispatch();
-
   const [modal, setModal] = useState(false);
   const filter = useSelector((state) => state.item.filterList);
 
   const handelFilter = (e) => {
     dispatch(filterdlist(e.target.value));
   };
+
+  const handelSearch = (e) =>{
+    dispatch(searchtodo(e.target.value))
+  }
 
   const toggle = () => setModal(!modal);
 
@@ -38,7 +41,7 @@ function Todo() {
                 type="text"
                 className="form-control"
                 placeholder="Type to search..."
-                // onChange={(e) => setSearch(e.target.value)}
+                onChange={handelSearch}
               />
             </div>
             <div className="col-12 col-md-3 col-lg-3 col-xl-3 d-flex d-flex justify-content-center">
@@ -70,8 +73,8 @@ function Todo() {
         </div>
       </div>
       <div className="task-container">
-        <Card />
-        <Pagination count={10} className="mt-3" />
+        <Card/>
+        {/* <Pagination count={10} className="mt-3" /> */}
       </div>
       <CreateTask type="add" modal={modal} toggle={toggle} />
     </>
